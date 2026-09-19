@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>AI Matching Result - SkillMatch AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        SkillMatch AI
+    </div>
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        {% if session.get('user_id') %}
+
+            <a href="/dashboard">Dashboard</a>
+
+            <a href="/jobs">Jobs</a>
+
+            <a href="/upload">Resume Analysis</a>
+
+            <a href="/match" class="active">Candidate Matching</a>
+
+            <a href="/ranking">Candidate Ranking</a>
+
+            <a href="/history">Analysis History</a>
+
+            <a href="/logout">Logout</a>
+
+        {% else %}
+
+            <a href="/login">Login</a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>🎯 AI Candidate Matching Result</h1>
+
+        <p>
+            AI-powered analysis of candidate compatibility
+            with the job requirements.
+        </p>
+
+    </div>
+
+</section>
+
+
+<section class="result-section">
+
+    <div class="container">
+
+
+        <!-- Candidate -->
+
+        <div class="result-card">
+
+            <h2>📄 Candidate Resume</h2>
+
+            <p>
+                <strong>{{ filename }}</strong>
+            </p>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- Final Score -->
+
+        <div class="result-card score-card">
+
+            <h2>🎯 Final Compatibility Score</h2>
+
+            <div class="score-box">
+
+                <h1>
+                    {{ score }}%
+                </h1>
+
+                <p>
+                    Overall Candidate-Job Compatibility
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- AI Metrics -->
+
+        <div class="result-card">
+
+            <h2>🧠 AI Matching Analysis</h2>
+
+            <div class="dashboard-grid">
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        📊
+                    </div>
+
+                    <h3>
+                        Keyword Match
+                    </h3>
+
+                    <h2>
+                        {{ keyword_score }}%
+                    </h2>
+
+                    <p>
+                        Based on required skills
+                        directly found in the resume.
+                    </p>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        🧠
+                    </div>
+
+                    <h3>
+                        Semantic AI Score
+                    </h3>
+
+                    <h2>
+                        {{ semantic_score }}%
+                    </h2>
+
+                    <p>
+                        Based on semantic similarity
+                        between candidate and job skills.
+                    </p>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        🎯
+                    </div>
+
+                    <h3>
+                        Hybrid AI Score
+                    </h3>
+
+                    <h2>
+                        {{ score }}%
+                    </h2>
+
+                    <p>
+                        Combined keyword and AI
+                        semantic matching.
+                    </p>
+
+                </div>
+
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- Matched Skills -->
+
+        <div class="result-card">
+
+            <h2>✅ Matched Skills</h2>
+
+            <div class="skills">
+
+                {% if matched_skills %}
+
+                    {% for skill in matched_skills %}
+
+                        <span class="skill-tag">
+                            {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>
+                        No exact skills matched.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- Missing Skills -->
+
+        <div class="result-card">
+
+            <h2>❌ Skill Gaps</h2>
+
+            <div class="skills">
+
+                {% if missing_skills %}
+
+                    {% for skill in missing_skills %}
+
+                        <span class="skill-tag">
+                            {{ skill }}
+                        </span>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <p>
+                        🎉 No major skill gaps detected.
+                    </p>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- Candidate Skills -->
+
+        <div class="result-card">
+
+            <h2>👤 Candidate Skills</h2>
+
+            <div class="skills">
+
+                {% for skill in candidate_skills %}
+
+                    <span class="skill-tag">
+                        {{ skill }}
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+
+
+        <br>
+
+
+        <!-- Required Skills -->
+
+        <div class="result-card">
+
+            <h2>💼 Required Job Skills</h2>
+
+            <div class="skills">
+
+                {% for skill in required_skills %}
+
+                    <span class="skill-tag">
+                        {{ skill }}
+                    </span>
+
+                {% endfor %}
+
+            </div>
+
+        </div>
+<br>
+
+<!-- AI Interview Questions -->
+
+<div class="result-card">
+
+    <h2>🤖 AI Interview Questions</h2>
+
+    <p>
+        Questions generated from the job requirements
+        and identified skill gaps.
+    </p>
+
+    <br>
+
+    {% if interview_questions %}
+
+        {% for item in interview_questions %}
+
+            <div class="interview-question">
+
+                <h3>
+                    {{ loop.index }}. {{ item.question }}
+                </h3>
+
+                <p>
+                    <strong>Skill:</strong>
+                    {{ item.skill }}
+                </p>
+
+            </div>
+
+            <br>
+
+        {% endfor %}
+
+    {% else %}
+
+        <p>
+            No interview questions could be generated.
+        </p>
+
+    {% endif %}
+
+</div>
+
+        <br>
+
+
+        <a href="/match"
+           class="btn">
+
+            🔄 Analyze Another Candidate
+
+        </a>
+
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 SkillMatch AI |
+        AI Recruitment Intelligence Platform
+    </p>
+
+</footer>
+
+</body>
+
+</html>

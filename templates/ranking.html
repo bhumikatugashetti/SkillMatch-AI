@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Candidate Ranking - SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/jobs">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking" class="active">Candidate Ranking</a>
+
+                <a href="/history">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>🏆 Candidate Ranking</h1>
+
+            <p>
+                Upload multiple candidate resumes and compare them
+                against a single job description.
+            </p>
+
+            <form action="/ranking" method="POST" enctype="multipart/form-data">
+
+                <h3>💼 Job Description</h3>
+
+                <br>
+
+                <textarea name="job_description" placeholder="Paste the job description here..." required></textarea>
+
+                <br><br>
+
+                <h3>📄 Upload Candidate Resumes</h3>
+
+                <br>
+
+                <input type="file" name="resumes" accept=".pdf" multiple required>
+
+                <br><br>
+
+                <p>
+                    You can select multiple PDF resumes using
+                    Ctrl + Click.
+                </p>
+
+                <br>
+
+                <button type="submit">
+                    🏆 Rank Candidates
+                </button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <footer>
+
+        © 2026 SkillMatch AI |
+        AI Recruitment Intelligence Platform
+
+    </footer>
+
+</body>
+
+</html>

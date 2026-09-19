@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Job Analysis Results</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        SkillMatch AI
+    </div>
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        {% if session.get('user_id') %}
+
+            <a href="/dashboard">Dashboard</a>
+
+            <a href="/jobs">Jobs</a>
+
+            <a href="/upload">Resume Analysis</a>
+
+            <a href="/match">Candidate Matching</a>
+
+            <a href="/ranking">Candidate Ranking</a>
+
+            <a href="/history">Analysis History</a>
+
+            <a href="/logout">Logout</a>
+
+        {% else %}
+
+            <a href="/login">Login</a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="features">
+
+    <h2>
+        🎯 Job Analysis Results
+    </h2>
+
+
+    <div class="feature-card">
+
+        <h3>
+            Required Skills
+        </h3>
+
+        <br>
+
+
+        {% if required_skills %}
+
+            {% for skill in required_skills %}
+
+                <span style="
+                    display:inline-block;
+                    padding:8px 14px;
+                    margin:5px;
+                    background:#eef2ff;
+                    border-radius:20px;
+                    font-weight:bold;
+                ">
+                    {{ skill }}
+                </span>
+
+            {% endfor %}
+
+        {% else %}
+
+            <p>
+                No known technical skills detected.
+            </p>
+
+        {% endif %}
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 SkillMatch AI
+    </p>
+
+</footer>
+
+</body>
+
+</html>

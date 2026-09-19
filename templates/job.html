@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Job Analysis - SkillMatch AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+
+<body>
+
+<header>
+
+    <div class="logo">
+        SkillMatch AI
+    </div>
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        {% if session.get('user_id') %}
+
+            <a href="/dashboard">Dashboard</a>
+
+            <a href="/jobs">Jobs</a>
+
+            <a href="/upload">Resume Analysis</a>
+
+            <a href="/match">Candidate Matching</a>
+
+            <a href="/ranking">Candidate Ranking</a>
+
+            <a href="/history">Analysis History</a>
+
+            <a href="/logout">Logout</a>
+
+        {% else %}
+
+            <a href="/login">Login</a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="features">
+
+    <h2>
+        Job Description Analyzer
+    </h2>
+
+    <p>
+        Enter the job description below.
+        SkillMatch AI will identify the required skills.
+    </p>
+
+    <br>
+
+
+    <form action="/job/analyze"
+          method="POST">
+
+        <textarea
+            name="job_description"
+            rows="15"
+            placeholder="Paste the Job Description here..."
+            required
+            style="
+                width:80%;
+                padding:20px;
+                border:1px solid #ddd;
+                border-radius:10px;
+                font-size:16px;
+            "
+        ></textarea>
+
+        <br><br>
+
+        <button type="submit">
+            Analyze Job
+        </button>
+
+    </form>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 SkillMatch AI
+    </p>
+
+</footer>
+
+</body>
+
+</html>

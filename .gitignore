@@ -1,0 +1,57 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# C extensions
+*.so
+
+# Virtual Environments
+venv/
+.venv/
+env/
+ENV/
+env.bak/
+venv.bak/
+
+# Environment Variables & Secrets
+.env
+.env.*
+*.pem
+*.key
+
+# Database Runtime Files (keep database/ schema code tracked, ignore runtime db files)
+database/*.db
+*.sqlite
+*.sqlite3
+*.db
+
+# User Uploaded Resumes / Private Candidate Files
+uploads/resumes/*
+!uploads/resumes/.gitkeep
+
+# Application & Server Logs
+*.log
+logs/
+
+# Model & HuggingFace Caches
+.cache/
+hf_cache/
+models_cache/
+
+# OS-specific files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+desktop.ini
+
+# IDE & Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~

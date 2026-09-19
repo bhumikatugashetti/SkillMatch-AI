@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Page Not Found - SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/jobs">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking">Candidate Ranking</a>
+
+                <a href="/history">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- 404 HERO / CONTAINER -->
+
+    <section class="hero" style="min-height: 75vh; align-items: center; justify-content: center; display: flex;">
+
+        <div class="hero-content" style="max-width: 600px;">
+
+            <div style="background: white; padding: 50px 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; text-align: center;">
+
+                <div style="font-size: 64px; margin-bottom: 10px;">🔍</div>
+
+                <h1 style="font-size: 36px; color: #0f172a; margin-bottom: 12px;">404 - Page Not Found</h1>
+
+                <p style="color: #64748b; font-size: 16px; line-height: 1.6; margin-bottom: 30px;">
+                    The page or resource you are looking for does not exist or has been moved.
+                </p>
+
+                <div style="display: flex; gap: 15px; justify-content: center;">
+
+                    <a href="/" class="btn-action" style="background: #2563eb; padding: 12px 24px; font-size: 15px; text-decoration: none;">
+                        🏠 Return Home
+                    </a>
+
+                    {% if session.get('user_id') %}
+                        <a href="/dashboard" class="btn-action" style="background: #4f46e5; padding: 12px 24px; font-size: 15px; text-decoration: none;">
+                            📊 Go to Dashboard
+                        </a>
+                    {% endif %}
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>© 2026 SkillMatch AI | AI Recruitment Intelligence Platform</p>
+
+    </footer>
+
+</body>
+
+</html>

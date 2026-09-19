@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Recruiter Login - SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/jobs">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking">Candidate Ranking</a>
+
+                <a href="/history">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login" class="active">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- LOGIN HERO / CONTAINER -->
+
+    <section class="hero" style="min-height: 80vh; align-items: center; justify-content: center; display: flex;">
+
+        <div class="hero-content" style="width: 100%; max-width: 480px;">
+
+            <div style="background: white; padding: 40px; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.08); border: 1px solid #e2e8f0; text-align: left;">
+
+                <div style="text-align: center; margin-bottom: 25px;">
+                    <div style="font-size: 42px; margin-bottom: 8px;">🔐</div>
+                    <h1 style="font-size: 26px; color: #0f172a; margin-bottom: 6px;">Recruiter Login</h1>
+                    <p style="color: #64748b; font-size: 14px;">Sign in to access your recruiter dashboard & candidate tools</p>
+                </div>
+
+                {% if error %}
+                    <div style="background: #fef2f2; border-left: 4px solid #ef4444; color: #991b1b; padding: 12px 16px; border-radius: 6px; font-size: 14px; margin-bottom: 20px;">
+                        ⚠️ {{ error }}
+                    </div>
+                {% endif %}
+
+                <form action="/login" method="POST" style="width: 100%; margin: 0; padding: 0; box-shadow: none; background: transparent;">
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Username</label>
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Enter recruiter username"
+                            required
+                            style="width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.2s;"
+                            value="{{ username if username else '' }}"
+                        >
+                    </div>
+
+                    <div style="margin-bottom: 25px;">
+                        <label style="display: block; font-size: 14px; font-weight: 600; color: #334155; margin-bottom: 6px;">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Enter password"
+                            required
+                            style="width: 100%; padding: 12px 14px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 15px; outline: none; transition: border-color 0.2s;"
+                        >
+                    </div>
+
+                    <button type="submit" style="width: 100%; padding: 14px; font-size: 16px; font-weight: 600; border-radius: 8px; background: #2563eb; color: white; border: none; cursor: pointer; transition: background 0.2s;">
+                        Sign In →
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>© 2026 SkillMatch AI | AI Recruitment Intelligence Platform</p>
+
+    </footer>
+
+</body>
+
+</html>

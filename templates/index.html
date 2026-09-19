@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+
+    <!-- =====================================================
+         HEADER
+    ====================================================== -->
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/" class="active">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/jobs">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking">Candidate Ranking</a>
+
+                <a href="/history">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+
+    <!-- =====================================================
+         HERO SECTION
+    ====================================================== -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>
+                AI-Powered Recruitment
+                & Skill Intelligence
+            </h1>
+
+            <p>
+                Analyze resumes, understand job requirements,
+                match candidates with suitable roles and identify
+                important skill gaps using AI.
+            </p>
+
+
+            <div class="hero-buttons">
+
+                <a href="/upload">
+                    <button>
+                        📄 Candidate Analysis
+                    </button>
+                </a>
+
+
+                <a href="/job">
+                    <button class="secondary-button">
+                        💼 Job Description
+                    </button>
+                </a>
+
+
+                <a href="/match">
+                    <button>
+                        🎯 Match Candidate
+                    </button>
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FEATURES
+    ====================================================== -->
+
+    <section class="features" id="features">
+
+        <h2>
+            What SkillMatch AI Does
+        </h2>
+
+
+        <div class="feature-container">
+
+
+            <!-- Resume -->
+
+            <div class="feature-card">
+
+                <h3>
+                    📄 Resume Analysis
+                </h3>
+
+                <p>
+                    Upload a candidate resume and automatically
+                    extract important technical skills.
+                </p>
+
+                <br>
+
+                <a href="/upload">
+                    Analyze Resume →
+                </a>
+
+            </div>
+
+
+
+            <!-- Job -->
+
+            <div class="feature-card">
+
+                <h3>
+                    💼 Job Analysis
+                </h3>
+
+                <p>
+                    Enter a job description and identify the
+                    technical skills required for the role.
+                </p>
+
+                <br>
+
+                <a href="/job">
+                    Analyze Job →
+                </a>
+
+            </div>
+
+
+
+            <!-- Matching -->
+
+            <div class="feature-card">
+
+                <h3>
+                    🎯 Candidate Matching
+                </h3>
+
+                <p>
+                    Compare candidate skills with job requirements
+                    and calculate compatibility.
+                </p>
+
+                <br>
+
+                <a href="/match">
+                    Match Candidate →
+                </a>
+
+            </div>
+
+
+
+            <!-- Skill Gap -->
+
+            <div class="feature-card">
+
+                <h3>
+                    🧠 Skill Gap Analysis
+                </h3>
+
+                <p>
+                    Identify missing skills and understand what
+                    the candidate needs to improve.
+                </p>
+
+                <br>
+
+                <a href="/match">
+                    View Skill Gap →
+                </a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         WORKFLOW
+    ====================================================== -->
+
+    <section class="features">
+
+        <h2>
+            How SkillMatch AI Works
+        </h2>
+
+
+        <div class="feature-container">
+
+
+            <div class="feature-card">
+
+                <h3>1️⃣ Upload Resume</h3>
+
+                <p>
+                    Recruiter uploads the candidate's PDF resume.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <h3>2️⃣ Analyze Job</h3>
+
+                <p>
+                    Job description is analyzed to identify
+                    required skills.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <h3>3️⃣ Match Skills</h3>
+
+                <p>
+                    Candidate skills are compared with the
+                    required job skills.
+                </p>
+
+            </div>
+
+
+            <div class="feature-card">
+
+                <h3>4️⃣ Get Results</h3>
+
+                <p>
+                    SkillMatch AI generates a compatibility score
+                    and identifies skill gaps.
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+         FOOTER
+    ====================================================== -->
+
+    <footer>
+
+        © 2026 SkillMatch AI |
+        AI Recruitment Intelligence Platform
+
+    </footer>
+
+
+
+    <!-- JAVASCRIPT -->
+
+    <script src="{{ url_for('static', filename='js/script.js') }}">
+    </script>
+
+
+</body>
+
+</html>

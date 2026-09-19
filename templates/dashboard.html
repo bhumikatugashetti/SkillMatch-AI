@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Dashboard - SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard" class="active">Dashboard</a>
+
+                <a href="/jobs">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking">Candidate Ranking</a>
+
+                <a href="/history">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- DASHBOARD -->
+
+    <main class="dashboard">
+
+        <div class="dashboard-header">
+
+            <h1>📊 Recruitment Dashboard</h1>
+
+            <p>
+                Manage candidate analysis and job matching from one place.
+            </p>
+
+        </div>
+
+
+        <!-- REAL DATABASE STATS SECTION -->
+
+        <section class="dashboard-stats-section">
+
+            <h2 class="section-title">📈 System Statistics</h2>
+
+            <div class="dashboard-cards stats-grid">
+
+                <div class="dashboard-card stat-metric-card">
+
+                    <div class="dashboard-icon">💼</div>
+
+                    <h2>{{ stats.total_jobs if stats else 0 }}</h2>
+
+                    <p class="stat-label">Total Jobs</p>
+
+                </div>
+
+                {% if stats and stats.has_data %}
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">📊</div>
+
+                        <h2>{{ stats.total_analyses }}</h2>
+
+                        <p class="stat-label">Total Analyses</p>
+
+                    </div>
+
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">🎯</div>
+
+                        <h2>{{ "%.2f"|format(stats.avg_score) }}%</h2>
+
+                        <p class="stat-label">Average Compatibility</p>
+
+                    </div>
+
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">🏆</div>
+
+                        <h2>{{ "%.2f"|format(stats.highest_score) }}%</h2>
+
+                        <p class="stat-label">Highest Compatibility</p>
+
+                    </div>
+
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">⚠️</div>
+
+                        <h2>{{ stats.skill_gaps_detected }}</h2>
+
+                        <p class="stat-label">Skill Gaps Detected</p>
+
+                    </div>
+
+                {% else %}
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">📊</div>
+
+                        <h2>0</h2>
+
+                        <p class="stat-label">Total Analyses</p>
+
+                    </div>
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">🎯</div>
+
+                        <h2>0.00%</h2>
+
+                        <p class="stat-label">Average Compatibility</p>
+
+                    </div>
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">🏆</div>
+
+                        <h2>0.00%</h2>
+
+                        <p class="stat-label">Highest Compatibility</p>
+
+                    </div>
+
+                    <div class="dashboard-card stat-metric-card">
+
+                        <div class="dashboard-icon">⚠️</div>
+
+                        <h2>0</h2>
+
+                        <p class="stat-label">Skill Gaps Detected</p>
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </section>
+
+
+        <!-- RECENT ANALYSES (IF ANY) -->
+
+        {% if recent_analyses %}
+
+            <section class="dashboard-section">
+
+                <div class="section-header-flex">
+
+                    <h2>🕒 Recent Match Analyses</h2>
+
+                    <a href="/history" class="link-more">View All History →</a>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Candidate</th>
+
+                                <th>Score</th>
+
+                                <th>Keyword</th>
+
+                                <th>Semantic</th>
+
+                                <th>Date</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in recent_analyses %}
+
+                                <tr>
+
+                                    <td>📄 {{ item.resume_filename }}</td>
+
+                                    <td>
+                                        <span class="score-badge {% if item.final_score >= 70 %}score-high{% elif item.final_score >= 40 %}score-med{% else %}score-low{% endif %}">
+                                            {{ "%.2f"|format(item.final_score) }}%
+                                        </span>
+                                    </td>
+
+                                    <td>{{ "%.2f"|format(item.keyword_score) }}%</td>
+
+                                    <td>{{ "%.2f"|format(item.semantic_score) }}%</td>
+
+                                    <td>📅 {{ item.date_formatted }}</td>
+
+                                    <td>
+                                        <a href="/history/{{ item.id }}" class="btn-action">View Details →</a>
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </section>
+
+        {% endif %}
+
+
+        <!-- QUICK ACTIONS / TOOLS -->
+
+        <section class="dashboard-section">
+
+            <h2>🛠️ Recruitment Tools</h2>
+
+            <div class="dashboard-cards">
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        💼
+                    </div>
+
+                    <h2>Recruiter Job Management</h2>
+
+                    <p>
+                        Create, view, edit, and delete job descriptions for candidate matching.
+                    </p>
+
+                    <a href="/jobs">
+                        Manage Jobs →
+                    </a>
+
+                </div>
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        👤
+                    </div>
+
+                    <h2>Resume Analysis</h2>
+
+                    <p>
+                        Upload and extract technical skills from PDF resumes.
+                    </p>
+
+                    <a href="/upload">
+                        Analyze Resume →
+                    </a>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        🎯
+                    </div>
+
+                    <h2>Candidate Matching</h2>
+
+                    <p>
+                        Compare candidate skills with job requirements.
+                    </p>
+
+                    <a href="/match">
+                        Start Matching →
+                    </a>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        🏆
+                    </div>
+
+                    <h2>Candidate Ranking</h2>
+
+                    <p>
+                        Compare multiple candidates and rank by job fit.
+                    </p>
+
+                    <a href="/ranking">
+                        Rank Candidates →
+                    </a>
+
+                </div>
+
+
+                <div class="dashboard-card">
+
+                    <div class="dashboard-icon">
+                        📜
+                    </div>
+
+                    <h2>Analysis History</h2>
+
+                    <p>
+                        View all saved candidate evaluations and gap analyses.
+                    </p>
+
+                    <a href="/history">
+                        View History →
+                    </a>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- WORKFLOW -->
+
+        <section class="dashboard-section">
+
+            <h2>
+                Recruitment Workflow
+            </h2>
+
+            <div class="workflow">
+
+                <div class="workflow-step">
+
+                    <span>1</span>
+
+                    <h3>Create Job</h3>
+
+                    <p>
+                        Post target job description & extract skills.
+                    </p>
+
+                </div>
+
+
+                <div class="workflow-arrow">
+                    →
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <span>2</span>
+
+                    <h3>Upload Resume</h3>
+
+                    <p>
+                        Upload candidate's PDF resume.
+                    </p>
+
+                </div>
+
+
+                <div class="workflow-arrow">
+                    →
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <span>3</span>
+
+                    <h3>Match</h3>
+
+                    <p>
+                        Calculate candidate-job compatibility score.
+                    </p>
+
+                </div>
+
+
+                <div class="workflow-arrow">
+                    →
+                </div>
+
+
+                <div class="workflow-step">
+
+                    <span>4</span>
+
+                    <h3>Skill Gap & History</h3>
+
+                    <p>
+                        Identify missing skills & save results.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        © 2026 SkillMatch AI |
+        AI Recruitment Intelligence Platform
+
+    </footer>
+
+</body>
+
+</html>

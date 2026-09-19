@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Analysis History - SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/jobs">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking">Candidate Ranking</a>
+
+                <a href="/history" class="active">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- MAIN CONTENT -->
+
+    <main class="result-container">
+
+        <div class="dashboard-header">
+
+            <h1>📜 Candidate Analysis History</h1>
+
+            <p>
+                View all previous candidate-job match analyses stored in your SQLite database.
+            </p>
+
+        </div>
+
+        <br>
+
+        <div class="result-box">
+
+            {% if analyses %}
+
+                <div class="table-responsive">
+
+                    <table class="history-table">
+
+                        <thead>
+
+                            <tr>
+
+                                <th>Candidate Resume</th>
+
+                                <th>Final Score</th>
+
+                                <th>Keyword Score</th>
+
+                                <th>Semantic Score</th>
+
+                                <th>Date</th>
+
+                                <th>Action</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            {% for item in analyses %}
+
+                                <tr>
+
+                                    <td class="filename-cell">
+
+                                        📄 {{ item.resume_filename }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <span class="score-badge {% if item.final_score >= 70 %}score-high{% elif item.final_score >= 40 %}score-med{% else %}score-low{% endif %}">
+                                            {{ "%.2f"|format(item.final_score) }}%
+                                        </span>
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ "%.2f"|format(item.keyword_score) }}%
+
+                                    </td>
+
+                                    <td>
+
+                                        {{ "%.2f"|format(item.semantic_score) }}%
+
+                                    </td>
+
+                                    <td class="date-cell">
+
+                                        📅 {{ item.date_formatted }}
+
+                                    </td>
+
+                                    <td>
+
+                                        <a href="/history/{{ item.id }}" class="btn-action">
+                                            View Details →
+                                        </a>
+
+                                    </td>
+
+                                </tr>
+
+                            {% endfor %}
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            {% else %}
+
+                <div class="empty-state">
+
+                    <div class="empty-icon">📭</div>
+
+                    <h2>No analyses yet</h2>
+
+                    <p>You have not run any candidate match analyses yet. Match a candidate with a job description to record results here.</p>
+
+                    <br>
+
+                    <a href="/match">
+                        <button>🎯 Start Matching Candidate</button>
+                    </a>
+
+                </div>
+
+            {% endif %}
+
+        </div>
+
+    </main>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        © 2026 SkillMatch AI |
+        AI Recruitment Intelligence Platform
+
+    </footer>
+
+</body>
+
+</html>

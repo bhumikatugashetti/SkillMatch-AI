@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Upload Resume - SkillMatch AI</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+<header>
+
+    <div class="logo">
+        SkillMatch AI
+    </div>
+
+    <nav>
+
+        <a href="/">Home</a>
+
+        {% if session.get('user_id') %}
+
+            <a href="/dashboard">Dashboard</a>
+
+            <a href="/jobs">Jobs</a>
+
+            <a href="/upload" class="active">Resume Analysis</a>
+
+            <a href="/match">Candidate Matching</a>
+
+            <a href="/ranking">Candidate Ranking</a>
+
+            <a href="/history">Analysis History</a>
+
+            <a href="/logout">Logout</a>
+
+        {% else %}
+
+            <a href="/login">Login</a>
+
+        {% endif %}
+
+    </nav>
+
+</header>
+
+
+<main>
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <h1>
+            Upload Candidate Resume
+        </h1>
+
+        <p>
+            Upload a PDF resume and let SkillMatch AI
+            analyze the candidate profile.
+        </p>
+
+
+        <form action="/analyze"
+              method="POST"
+              enctype="multipart/form-data">
+
+            <input
+                type="file"
+                name="resume"
+                accept=".pdf"
+                required
+            >
+
+            <br><br>
+
+            <button type="submit">
+                Analyze Resume
+            </button>
+
+        </form>
+
+    </div>
+
+</section>
+
+</main>
+
+
+<footer>
+
+    <p>
+        © 2026 SkillMatch AI
+    </p>
+
+</footer>
+
+</body>
+
+</html>

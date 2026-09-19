@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Edit Job - SkillMatch AI</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+</head>
+
+<body>
+
+    <!-- HEADER -->
+
+    <header>
+
+        <div class="logo">
+            SkillMatch AI
+        </div>
+
+        <nav>
+
+            <a href="/">Home</a>
+
+            {% if session.get('user_id') %}
+
+                <a href="/dashboard">Dashboard</a>
+
+                <a href="/jobs" class="active">Jobs</a>
+
+                <a href="/upload">Resume Analysis</a>
+
+                <a href="/match">Candidate Matching</a>
+
+                <a href="/ranking">Candidate Ranking</a>
+
+                <a href="/history">Analysis History</a>
+
+                <a href="/logout">Logout</a>
+
+            {% else %}
+
+                <a href="/login">Login</a>
+
+            {% endif %}
+
+        </nav>
+
+    </header>
+
+
+    <!-- FORM SECTION -->
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>✏️ Edit Job Posting</h1>
+
+            <p>
+                Update the job details below. SkillMatch AI will automatically update the required skills when the description changes.
+            </p>
+
+            <form action="/jobs/{{ job.id }}/edit" method="POST">
+
+                <div style="text-align: left; margin-bottom: 20px;">
+
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #1e293b;">Job Title</label>
+
+                    <input
+                        type="text"
+                        name="job_title"
+                        value="{{ job.job_title }}"
+                        placeholder="e.g. Cloud Engineer"
+                        required
+                        style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px;"
+                    >
+
+                </div>
+
+                <div style="text-align: left; margin-bottom: 20px;">
+
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #1e293b;">Company Name</label>
+
+                    <input
+                        type="text"
+                        name="company_name"
+                        value="{{ job.company_name }}"
+                        placeholder="e.g. CloudNova Solutions"
+                        required
+                        style="width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 15px;"
+                    >
+
+                </div>
+
+                <div style="text-align: left; margin-bottom: 20px;">
+
+                    <label style="display: block; font-weight: bold; margin-bottom: 8px; color: #1e293b;">Job Description</label>
+
+                    <textarea
+                        name="job_description"
+                        placeholder="Paste full job description here..."
+                        required
+                        rows="10"
+                    >{{ job.job_description }}</textarea>
+
+                </div>
+
+                <div style="display: flex; gap: 15px; justify-content: flex-end; align-items: center; margin-top: 25px;">
+
+                    <a href="/jobs/{{ job.id }}" class="btn-action" style="background: #64748b; padding: 12px 24px; font-size: 15px; text-decoration: none;">
+                        Cancel
+                    </a>
+
+                    <button type="submit" style="padding: 12px 28px;">
+                        💾 Save Changes
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </section>
+
+
+    <!-- FOOTER -->
+
+    <footer>
+
+        <p>© 2026 SkillMatch AI | AI Recruitment Intelligence Platform</p>
+
+    </footer>
+
+</body>
+
+</html>
