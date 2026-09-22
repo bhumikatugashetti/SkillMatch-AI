@@ -1,111 +1,75 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Candidate Ranking - SkillMatch AI</title>
-
+    <title>Batch Candidate Ranking — SkillMatch AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-
 <body>
 
+    <!-- HEADER / NAVIGATION -->
     <header>
-
-        <div class="logo">
-            SkillMatch AI
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
         </div>
 
         <nav>
-
             <a href="/">Home</a>
-
-            {% if session.get('user_id') %}
-
-                <a href="/dashboard">Dashboard</a>
-
-                <a href="/jobs">Jobs</a>
-
-                <a href="/upload">Resume Analysis</a>
-
-                <a href="/match">Candidate Matching</a>
-
-                <a href="/ranking" class="active">Candidate Ranking</a>
-
-                <a href="/history">Analysis History</a>
-
-                <a href="/logout">Logout</a>
-
-            {% else %}
-
-                <a href="/login">Login</a>
-
-            {% endif %}
-
+            <a href="/dashboard">Dashboard</a>
+            <a href="/jobs">Jobs</a>
+            <a href="/upload">Resume Analysis</a>
+            <a href="/match">Matching</a>
+            <a href="/ranking" class="active">Ranking</a>
+            <a href="/history">History</a>
+            <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
         </nav>
-
     </header>
 
-
-    <section class="hero">
-
-        <div class="hero-content">
-
-            <h1>🏆 Candidate Ranking</h1>
-
-            <p>
-                Upload multiple candidate resumes and compare them
-                against a single job description.
-            </p>
+    <!-- RANKING WORKSPACE -->
+    <main class="section-wrapper" style="padding-top: 50px;">
+        <div class="glass-panel form-container" style="max-width: 800px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="badge-pill" style="margin-bottom: 12px;">MULTI-CANDIDATE COMPARISON</div>
+                <h1 class="text-gradient-cyan" style="font-size: 34px; font-weight: 800;">
+                    🏆 Batch Applicant Ranking
+                </h1>
+                <p style="color: var(--text-secondary); font-size: 15px; margin-top: 8px;">
+                    Upload multiple applicant PDF resumes to evaluate, compare, and rank against a target job description.
+                </p>
+            </div>
 
             <form action="/ranking" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>💼 Target Job Description</label>
+                    <textarea name="job_description" class="form-control" rows="6" placeholder="Paste target job description here..." required></textarea>
+                </div>
 
-                <h3>💼 Job Description</h3>
+                <div class="form-group">
+                    <label>📄 Upload Multiple Candidate PDF Resumes</label>
+                    <div class="upload-dropzone glass-panel" style="padding: 36px 20px;">
+                        <div class="dropzone-icon" style="font-size: 36px;">📚</div>
+                        <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Select multiple PDF files (Ctrl + Click or Cmd + Click)</h4>
+                        <p class="dropzone-filename" style="font-size: 12px; color: var(--text-muted);">PDF files only</p>
+                        <input type="file" name="resumes" accept=".pdf" multiple class="file-input-hidden" required>
+                    </div>
+                </div>
 
-                <br>
-
-                <textarea name="job_description" placeholder="Paste the job description here..." required></textarea>
-
-                <br><br>
-
-                <h3>📄 Upload Candidate Resumes</h3>
-
-                <br>
-
-                <input type="file" name="resumes" accept=".pdf" multiple required>
-
-                <br><br>
-
-                <p>
-                    You can select multiple PDF resumes using
-                    Ctrl + Click.
-                </p>
-
-                <br>
-
-                <button type="submit">
-                    🏆 Rank Candidates
-                </button>
-
+                <div style="text-align: center; margin-top: 30px;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 16px;">
+                        🏆 Rank Applicants Now
+                    </button>
+                </div>
             </form>
-
         </div>
+    </main>
 
-    </section>
-
-
+    <!-- FOOTER -->
     <footer>
-
-        © 2026 SkillMatch AI |
-        AI Recruitment Intelligence Platform
-
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
     </footer>
 
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>

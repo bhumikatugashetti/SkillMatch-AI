@@ -1,461 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Dashboard - SkillMatch AI</title>
-
+    <title>AI Command Center — SkillMatch AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-
 <body>
 
-    <!-- HEADER -->
-
+    <!-- HEADER / NAVIGATION -->
     <header>
-
-        <div class="logo">
-            SkillMatch AI
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
         </div>
 
         <nav>
-
             <a href="/">Home</a>
-
-            {% if session.get('user_id') %}
-
-                <a href="/dashboard" class="active">Dashboard</a>
-
-                <a href="/jobs">Jobs</a>
-
-                <a href="/upload">Resume Analysis</a>
-
-                <a href="/match">Candidate Matching</a>
-
-                <a href="/ranking">Candidate Ranking</a>
-
-                <a href="/history">Analysis History</a>
-
-                <a href="/logout">Logout</a>
-
-            {% else %}
-
-                <a href="/login">Login</a>
-
-            {% endif %}
-
+            <a href="/dashboard" class="active">Dashboard</a>
+            <a href="/jobs">Jobs</a>
+            <a href="/upload">Resume Analysis</a>
+            <a href="/match">Matching</a>
+            <a href="/ranking">Ranking</a>
+            <a href="/history">History</a>
+            <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
         </nav>
-
     </header>
 
+    <!-- MAIN COMMAND CENTER -->
+    <main class="section-wrapper" style="padding-top: 50px;">
+        
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 40px; flex-wrap: wrap; gap: 20px;">
+            <div>
+                <div class="badge-pill" style="margin-bottom: 12px;">SYSTEM STATUS: ONLINE</div>
+                <h1 class="text-gradient-cyan" style="font-size: 40px; font-weight: 800;">
+                    AI Recruitment Command Center
+                </h1>
+                <p style="color: var(--text-secondary); font-size: 16px;">Real-time skill intelligence & applicant match metrics</p>
+            </div>
+            
+            <a href="/jobs/create" class="btn btn-primary">
+                ➕ Create New Job Posting
+            </a>
+        </div>
 
-    <!-- DASHBOARD -->
+        <!-- 5 FUTURISTIC 3D GLASS STAT CARDS -->
+        <div class="dashboard-grid">
+            <div class="glass-panel stat-card card-3d">
+                <div class="stat-info">
+                    <h4>Total Job Postings</h4>
+                    <div class="stat-number" data-target="{{ stats.total_jobs if stats else 0 }}">{{ stats.total_jobs if stats else 0 }}</div>
+                </div>
+                <div class="stat-icon" style="color: var(--cyan-glow);">💼</div>
+            </div>
 
-    <main class="dashboard">
+            <div class="glass-panel stat-card card-3d">
+                <div class="stat-info">
+                    <h4>Total Analyses</h4>
+                    <div class="stat-number" data-target="{{ stats.total_analyses if (stats and stats.has_data) else 0 }}">{{ stats.total_analyses if (stats and stats.has_data) else 0 }}</div>
+                </div>
+                <div class="stat-icon" style="color: var(--blue-glow);">📊</div>
+            </div>
 
-        <div class="dashboard-header">
+            <div class="glass-panel stat-card card-3d">
+                <div class="stat-info">
+                    <h4>Average Compatibility</h4>
+                    <div class="stat-number" data-target="{{ '%.2f'|format(stats.avg_score) if (stats and stats.has_data) else 0.0 }}" data-float="true">{{ "%.2f"|format(stats.avg_score) if (stats and stats.has_data) else "0.00" }}%</div>
+                </div>
+                <div class="stat-icon" style="color: var(--emerald-glow);">🎯</div>
+            </div>
 
-            <h1>📊 Recruitment Dashboard</h1>
+            <div class="glass-panel stat-card card-3d">
+                <div class="stat-info">
+                    <h4>Highest Compatibility</h4>
+                    <div class="stat-number" data-target="{{ '%.2f'|format(stats.highest_score) if (stats and stats.has_data) else 0.0 }}" data-float="true">{{ "%.2f"|format(stats.highest_score) if (stats and stats.has_data) else "0.00" }}%</div>
+                </div>
+                <div class="stat-icon" style="color: var(--amber-glow);">🏆</div>
+            </div>
 
-            <p>
-                Manage candidate analysis and job matching from one place.
-            </p>
+            <div class="glass-panel stat-card card-3d">
+                <div class="stat-info">
+                    <h4>Skill Gaps Detected</h4>
+                    <div class="stat-number" data-target="{{ stats.skill_gaps_detected if (stats and stats.has_data) else 0 }}">{{ stats.skill_gaps_detected if (stats and stats.has_data) else 0 }}</div>
+                </div>
+                <div class="stat-icon" style="color: var(--rose-glow);">⚠️</div>
+            </div>
+        </div>
+
+        <!-- DASHBOARD SECTIONS -->
+        <div class="dashboard-sections">
+            
+            <!-- RECENT ANALYSES TABLE -->
+            <div class="glass-panel" style="padding: 30px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="font-size: 20px; font-weight: 700;">🕒 Recent Candidate Match Analyses</h3>
+                    <a href="/history" style="font-size: 13px; font-weight: 600;">View Full History →</a>
+                </div>
+
+                {% if recent_analyses %}
+                    <div class="data-table-container">
+                        <table class="custom-table">
+                            <thead>
+                                <tr>
+                                    <th>Candidate Resume</th>
+                                    <th>Hybrid Score</th>
+                                    <th>Keyword</th>
+                                    <th>Semantic</th>
+                                    <th>Date</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in recent_analyses %}
+                                    <tr>
+                                        <td style="font-weight: 600; color: var(--text-primary);">📄 {{ item.resume_filename }}</td>
+                                        <td>
+                                            <span class="chip {% if item.final_score >= 60 %}chip-match{% else %}chip-gap{% endif %}" style="padding: 4px 10px; font-size: 12px;">
+                                                {{ "%.2f"|format(item.final_score) }}%
+                                            </span>
+                                        </td>
+                                        <td>{{ "%.2f"|format(item.keyword_score) }}%</td>
+                                        <td>{{ "%.2f"|format(item.semantic_score) }}%</td>
+                                        <td style="font-size: 13px; color: var(--text-muted);">{{ item.date_formatted }}</td>
+                                        <td>
+                                            <a href="/history/{{ item.id }}" class="btn btn-secondary" style="padding: 6px 12px; font-size: 12px;">Details →</a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% else %}
+                    <div style="padding: 40px; text-align: center; color: var(--text-muted);">
+                        No match evaluations recorded yet. Upload a candidate resume to begin.
+                    </div>
+                {% endif %}
+            </div>
+
+            <!-- RECRUITMENT WORKFLOW & QUICK LINKS -->
+            <div style="display: flex; flex-direction: column; gap: 30px;">
+                
+                <!-- Quick Tools -->
+                <div class="glass-panel" style="padding: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">🛠️ Quick Tools</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <a href="/jobs" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                            <span>💼</span> Manage Job Postings
+                        </a>
+                        <a href="/upload" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                            <span>📄</span> Resume Skill Extraction
+                        </a>
+                        <a href="/match" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                            <span>🎯</span> Candidate Job Matching
+                        </a>
+                        <a href="/ranking" class="btn btn-secondary" style="justify-content: flex-start; text-align: left;">
+                            <span>🏆</span> Batch Candidate Ranking
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Workflow Pipeline -->
+                <div class="glass-panel" style="padding: 30px;">
+                    <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 20px;">⚡ Recruitment Pipeline</h3>
+                    <div style="display: flex; flex-direction: column; gap: 16px;">
+                        <div style="display: flex; gap: 14px; align-items: center;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(0, 242, 254, 0.15); color: var(--cyan-glow); font-weight: 700; display: flex; align-items: center; justify-content: center;">1</div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 600;">Define Job Requirements</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Create or select job posting</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 14px; align-items: center;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(79, 172, 254, 0.15); color: var(--blue-glow); font-weight: 700; display: flex; align-items: center; justify-content: center;">2</div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 600;">Upload Candidate PDF</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Parse technical skills</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 14px; align-items: center;">
+                            <div style="width: 32px; height: 32px; border-radius: 50%; background: rgba(139, 92, 246, 0.15); color: var(--purple-glow); font-weight: 700; display: flex; align-items: center; justify-content: center;">3</div>
+                            <div>
+                                <div style="font-size: 14px; font-weight: 600;">Hybrid AI Match & Gaps</div>
+                                <div style="font-size: 12px; color: var(--text-muted);">Generate interview questions</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
 
         </div>
 
-
-        <!-- REAL DATABASE STATS SECTION -->
-
-        <section class="dashboard-stats-section">
-
-            <h2 class="section-title">📈 System Statistics</h2>
-
-            <div class="dashboard-cards stats-grid">
-
-                <div class="dashboard-card stat-metric-card">
-
-                    <div class="dashboard-icon">💼</div>
-
-                    <h2>{{ stats.total_jobs if stats else 0 }}</h2>
-
-                    <p class="stat-label">Total Jobs</p>
-
-                </div>
-
-                {% if stats and stats.has_data %}
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">📊</div>
-
-                        <h2>{{ stats.total_analyses }}</h2>
-
-                        <p class="stat-label">Total Analyses</p>
-
-                    </div>
-
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">🎯</div>
-
-                        <h2>{{ "%.2f"|format(stats.avg_score) }}%</h2>
-
-                        <p class="stat-label">Average Compatibility</p>
-
-                    </div>
-
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">🏆</div>
-
-                        <h2>{{ "%.2f"|format(stats.highest_score) }}%</h2>
-
-                        <p class="stat-label">Highest Compatibility</p>
-
-                    </div>
-
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">⚠️</div>
-
-                        <h2>{{ stats.skill_gaps_detected }}</h2>
-
-                        <p class="stat-label">Skill Gaps Detected</p>
-
-                    </div>
-
-                {% else %}
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">📊</div>
-
-                        <h2>0</h2>
-
-                        <p class="stat-label">Total Analyses</p>
-
-                    </div>
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">🎯</div>
-
-                        <h2>0.00%</h2>
-
-                        <p class="stat-label">Average Compatibility</p>
-
-                    </div>
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">🏆</div>
-
-                        <h2>0.00%</h2>
-
-                        <p class="stat-label">Highest Compatibility</p>
-
-                    </div>
-
-                    <div class="dashboard-card stat-metric-card">
-
-                        <div class="dashboard-icon">⚠️</div>
-
-                        <h2>0</h2>
-
-                        <p class="stat-label">Skill Gaps Detected</p>
-
-                    </div>
-
-                {% endif %}
-
-            </div>
-
-        </section>
-
-
-        <!-- RECENT ANALYSES (IF ANY) -->
-
-        {% if recent_analyses %}
-
-            <section class="dashboard-section">
-
-                <div class="section-header-flex">
-
-                    <h2>🕒 Recent Match Analyses</h2>
-
-                    <a href="/history" class="link-more">View All History →</a>
-
-                </div>
-
-                <div class="table-responsive">
-
-                    <table class="history-table">
-
-                        <thead>
-
-                            <tr>
-
-                                <th>Candidate</th>
-
-                                <th>Score</th>
-
-                                <th>Keyword</th>
-
-                                <th>Semantic</th>
-
-                                <th>Date</th>
-
-                                <th>Action</th>
-
-                            </tr>
-
-                        </thead>
-
-                        <tbody>
-
-                            {% for item in recent_analyses %}
-
-                                <tr>
-
-                                    <td>📄 {{ item.resume_filename }}</td>
-
-                                    <td>
-                                        <span class="score-badge {% if item.final_score >= 70 %}score-high{% elif item.final_score >= 40 %}score-med{% else %}score-low{% endif %}">
-                                            {{ "%.2f"|format(item.final_score) }}%
-                                        </span>
-                                    </td>
-
-                                    <td>{{ "%.2f"|format(item.keyword_score) }}%</td>
-
-                                    <td>{{ "%.2f"|format(item.semantic_score) }}%</td>
-
-                                    <td>📅 {{ item.date_formatted }}</td>
-
-                                    <td>
-                                        <a href="/history/{{ item.id }}" class="btn-action">View Details →</a>
-                                    </td>
-
-                                </tr>
-
-                            {% endfor %}
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
-
-        {% endif %}
-
-
-        <!-- QUICK ACTIONS / TOOLS -->
-
-        <section class="dashboard-section">
-
-            <h2>🛠️ Recruitment Tools</h2>
-
-            <div class="dashboard-cards">
-
-                <div class="dashboard-card">
-
-                    <div class="dashboard-icon">
-                        💼
-                    </div>
-
-                    <h2>Recruiter Job Management</h2>
-
-                    <p>
-                        Create, view, edit, and delete job descriptions for candidate matching.
-                    </p>
-
-                    <a href="/jobs">
-                        Manage Jobs →
-                    </a>
-
-                </div>
-
-                <div class="dashboard-card">
-
-                    <div class="dashboard-icon">
-                        👤
-                    </div>
-
-                    <h2>Resume Analysis</h2>
-
-                    <p>
-                        Upload and extract technical skills from PDF resumes.
-                    </p>
-
-                    <a href="/upload">
-                        Analyze Resume →
-                    </a>
-
-                </div>
-
-
-                <div class="dashboard-card">
-
-                    <div class="dashboard-icon">
-                        🎯
-                    </div>
-
-                    <h2>Candidate Matching</h2>
-
-                    <p>
-                        Compare candidate skills with job requirements.
-                    </p>
-
-                    <a href="/match">
-                        Start Matching →
-                    </a>
-
-                </div>
-
-
-                <div class="dashboard-card">
-
-                    <div class="dashboard-icon">
-                        🏆
-                    </div>
-
-                    <h2>Candidate Ranking</h2>
-
-                    <p>
-                        Compare multiple candidates and rank by job fit.
-                    </p>
-
-                    <a href="/ranking">
-                        Rank Candidates →
-                    </a>
-
-                </div>
-
-
-                <div class="dashboard-card">
-
-                    <div class="dashboard-icon">
-                        📜
-                    </div>
-
-                    <h2>Analysis History</h2>
-
-                    <p>
-                        View all saved candidate evaluations and gap analyses.
-                    </p>
-
-                    <a href="/history">
-                        View History →
-                    </a>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <!-- WORKFLOW -->
-
-        <section class="dashboard-section">
-
-            <h2>
-                Recruitment Workflow
-            </h2>
-
-            <div class="workflow">
-
-                <div class="workflow-step">
-
-                    <span>1</span>
-
-                    <h3>Create Job</h3>
-
-                    <p>
-                        Post target job description & extract skills.
-                    </p>
-
-                </div>
-
-
-                <div class="workflow-arrow">
-                    →
-                </div>
-
-
-                <div class="workflow-step">
-
-                    <span>2</span>
-
-                    <h3>Upload Resume</h3>
-
-                    <p>
-                        Upload candidate's PDF resume.
-                    </p>
-
-                </div>
-
-
-                <div class="workflow-arrow">
-                    →
-                </div>
-
-
-                <div class="workflow-step">
-
-                    <span>3</span>
-
-                    <h3>Match</h3>
-
-                    <p>
-                        Calculate candidate-job compatibility score.
-                    </p>
-
-                </div>
-
-
-                <div class="workflow-arrow">
-                    →
-                </div>
-
-
-                <div class="workflow-step">
-
-                    <span>4</span>
-
-                    <h3>Skill Gap & History</h3>
-
-                    <p>
-                        Identify missing skills & save results.
-                    </p>
-
-                </div>
-
-            </div>
-
-        </section>
-
     </main>
 
-
     <!-- FOOTER -->
-
     <footer>
-
-        © 2026 SkillMatch AI |
-        AI Recruitment Intelligence Platform
-
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
     </footer>
 
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>

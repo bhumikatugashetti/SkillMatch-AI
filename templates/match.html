@@ -1,133 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Candidate Matching - SkillMatch AI</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-
+    <title>Candidate Job Matching — SkillMatch AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
 <body>
 
-    <!-- HEADER -->
-
+    <!-- HEADER / NAVIGATION -->
     <header>
-
-        <div class="logo">
-            SkillMatch AI
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
         </div>
 
         <nav>
-
             <a href="/">Home</a>
-
-            {% if session.get('user_id') %}
-
-                <a href="/dashboard">Dashboard</a>
-
-                <a href="/jobs">Jobs</a>
-
-                <a href="/upload">Resume Analysis</a>
-
-                <a href="/match" class="active">Candidate Matching</a>
-
-                <a href="/ranking">Candidate Ranking</a>
-
-                <a href="/history">Analysis History</a>
-
-                <a href="/logout">Logout</a>
-
-            {% else %}
-
-                <a href="/login">Login</a>
-
-            {% endif %}
-
+            <a href="/dashboard">Dashboard</a>
+            <a href="/jobs">Jobs</a>
+            <a href="/upload">Resume Analysis</a>
+            <a href="/match" class="active">Matching</a>
+            <a href="/ranking">Ranking</a>
+            <a href="/history">History</a>
+            <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
         </nav>
-
     </header>
 
+    <!-- MATCHING WORKSPACE -->
+    <main class="section-wrapper" style="padding-top: 50px;">
+        <div class="glass-panel form-container" style="max-width: 800px;">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="badge-pill" style="margin-bottom: 12px;">HYBRID EVALUATION ENGINE</div>
+                <h1 class="text-gradient-cyan" style="font-size: 34px; font-weight: 800;">
+                    🎯 Candidate Job Matching
+                </h1>
+                <p style="color: var(--text-secondary); font-size: 15px; margin-top: 8px;">
+                    Upload applicant PDF resume and specify job requirements to compute compatibility and generate interview questions.
+                </p>
 
-    <!-- MATCHING SECTION -->
+                {% if selected_job_title %}
+                    <div style="background: rgba(0, 242, 254, 0.1); border: 1px solid rgba(0, 242, 254, 0.3); color: var(--cyan-glow); padding: 12px 20px; border-radius: var(--border-radius-md); font-weight: 600; margin-top: 20px; display: inline-block;">
+                        💼 Selected Target Job: {{ selected_job_title }}
+                    </div>
+                {% endif %}
+            </div>
 
-    <section class="hero">
-
-        <div class="hero-content">
-
-            <h1>
-                🎯 Candidate Job Matching
-            </h1>
-
-            <p>
-                Upload a candidate resume and enter the job description
-                to calculate the candidate's compatibility.
-            </p>
-
-            {% if selected_job_title %}
-                <div style="background: #e0e7ff; color: #3730a3; padding: 12px 20px; border-radius: 8px; font-weight: 600; margin: 20px auto; max-width: 700px; text-align: center;">
-                    💼 Matching for Job: {{ selected_job_title }}
+            <form action="/match" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>📄 Upload Candidate Resume (PDF)</label>
+                    <div class="upload-dropzone glass-panel" style="padding: 36px 20px;">
+                        <div class="dropzone-icon" style="font-size: 36px;">📄</div>
+                        <h4 style="font-size: 16px; font-weight: 600; margin-bottom: 4px;">Drop candidate resume here or click to browse</h4>
+                        <p class="dropzone-filename" style="font-size: 12px; color: var(--text-muted);">PDF format (Max 16MB)</p>
+                        <input type="file" name="resume" accept=".pdf" class="file-input-hidden" required>
+                    </div>
                 </div>
-            {% endif %}
 
-            <form action="/match" method="POST"
-                  enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>💼 Target Job Description & Skill Requirements</label>
+                    <textarea name="job_description" class="form-control" rows="8" placeholder="Paste full job description here..." required>{{ prefill_job_description if prefill_job_description else '' }}</textarea>
+                </div>
 
-                <h3>📄 Upload Candidate Resume</h3>
-
-                <br>
-
-                <input
-                    type="file"
-                    name="resume"
-                    accept=".pdf"
-                    required
-                >
-
-                <br><br>
-
-
-                <h3>💼 Job Description</h3>
-
-                <br>
-
-                <textarea
-                    name="job_description"
-                    placeholder="Paste the job description here..."
-                    required
-                >{{ prefill_job_description if prefill_job_description else '' }}</textarea>
-
-                <br><br>
-
-                <button type="submit">
-                    Analyze Candidate Match
-                </button>
-
+                <div style="text-align: center; margin-top: 30px;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center; font-size: 16px;">
+                        ⚡ Compute Candidate Compatibility Match
+                    </button>
+                </div>
             </form>
-
         </div>
-
-    </section>
-
+    </main>
 
     <!-- FOOTER -->
-
     <footer>
-
-        © 2026 SkillMatch AI |
-        AI Recruitment Intelligence Platform
-
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
     </footer>
 
-
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
-
 </body>
-
 </html>

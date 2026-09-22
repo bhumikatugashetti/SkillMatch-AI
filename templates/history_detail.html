@@ -1,347 +1,158 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Analysis Detail #{{ analysis.id }} - SkillMatch AI</title>
-
+    <title>Analysis Detail #{{ analysis.id }} — SkillMatch AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-
 <body>
 
-    <!-- HEADER -->
+    <!-- SVG GRADIENTS DEFS -->
+    <svg style="width: 0; height: 0; position: absolute;">
+        <defs>
+            <linearGradient id="cyan-blue-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#00f2fe" />
+                <stop offset="100%" stop-color="#4facfe" />
+            </linearGradient>
+        </defs>
+    </svg>
 
+    <!-- HEADER / NAVIGATION -->
     <header>
-
-        <div class="logo">
-            SkillMatch AI
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
         </div>
 
         <nav>
-
             <a href="/">Home</a>
-
-            {% if session.get('user_id') %}
-
-                <a href="/dashboard">Dashboard</a>
-
-                <a href="/jobs">Jobs</a>
-
-                <a href="/upload">Resume Analysis</a>
-
-                <a href="/match">Candidate Matching</a>
-
-                <a href="/ranking">Candidate Ranking</a>
-
-                <a href="/history" class="active">Analysis History</a>
-
-                <a href="/logout">Logout</a>
-
-            {% else %}
-
-                <a href="/login">Login</a>
-
-            {% endif %}
-
+            <a href="/dashboard">Dashboard</a>
+            <a href="/jobs">Jobs</a>
+            <a href="/upload">Resume Analysis</a>
+            <a href="/match">Matching</a>
+            <a href="/ranking">Ranking</a>
+            <a href="/history" class="active">History</a>
+            <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
         </nav>
-
     </header>
 
-
-    <!-- MAIN CONTENT -->
-
-    <main class="result-container">
-
-        <div class="dashboard-header">
-
-            <h1>📄 Saved Candidate Analysis Details</h1>
-
-            <p>
-                Stored Record ID: #{{ analysis.id }} | Analysis Date: {{ analysis.date_formatted }}
-            </p>
-
+    <!-- EVALUATION DETAIL -->
+    <main class="section-wrapper" style="padding-top: 40px; max-width: 1000px;">
+        <div style="margin-bottom: 24px;">
+            <a href="/history" style="font-size: 14px; font-weight: 600;">← Back to Analysis History</a>
         </div>
 
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <div class="badge-pill" style="margin-bottom: 8px;">RECORD #{{ analysis.id }}</div>
+                <h1 style="font-size: 32px; font-weight: 800;">📄 Candidate: {{ analysis.resume_filename }}</h1>
+                <div style="font-size: 13px; color: var(--text-muted); margin-top: 4px;">Evaluated on {{ analysis.date_formatted }}</div>
+            </div>
+        </div>
 
-        <section class="result-section">
-
-            <!-- Candidate Info & Analysis Date -->
-
-            <div class="result-card">
-
-                <h2>📄 Candidate Resume</h2>
-
-                <p>
-                    <strong>{{ analysis.resume_filename }}</strong>
-                </p>
-
-                <p class="text-subtle">
-                    Analysis Date: {{ analysis.created_at }}
-                </p>
-
+        <!-- 3D RADIAL COMPATIBILITY GAUGE -->
+        <div class="glass-panel score-visualizer-card card-3d">
+            <div style="font-size: 13px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 20px;">
+                Saved Candidate Compatibility Score
             </div>
 
-
-            <br>
-
-
-            <!-- Final Score -->
-
-            <div class="result-card score-card">
-
-                <h2>🎯 Final Compatibility Score</h2>
-
-                <div class="score-box">
-
-                    <h1>
-                        {{ "%.2f"|format(analysis.final_score) }}%
-                    </h1>
-
-                    <p>
-                        Overall Candidate-Job Compatibility
-                    </p>
-
+            <div class="radial-gauge-container">
+                <svg class="radial-svg" viewBox="0 0 200 200">
+                    <circle class="radial-bg-track" cx="100" cy="100" r="90"></circle>
+                    <circle class="radial-fill-track" cx="100" cy="100" r="90" data-score="{{ analysis.final_score }}"></circle>
+                </svg>
+                <div class="gauge-center-text">
+                    <div class="gauge-score-value">{{ "%.2f"|format(analysis.final_score) }}%</div>
+                    <div class="gauge-score-label">Compatibility</div>
                 </div>
+            </div>
+        </div>
 
+        <!-- THREE METRICS TRIO -->
+        <div class="metrics-trio-grid">
+            <div class="glass-panel metric-panel card-3d">
+                <h4>📊 Keyword Match Score</h4>
+                <div class="metric-val" style="color: var(--cyan-glow);">{{ "%.2f"|format(analysis.keyword_score) }}%</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Direct skill coverage</p>
             </div>
 
-
-            <br>
-
-
-            <!-- AI Metrics -->
-
-            <div class="result-card">
-
-                <h2>🧠 AI Matching Analysis</h2>
-
-                <div class="dashboard-grid">
-
-                    <div class="dashboard-card">
-
-                        <div class="dashboard-icon">
-                            📊
-                        </div>
-
-                        <h3>
-                            Keyword Match
-                        </h3>
-
-                        <h2>
-                            {{ "%.2f"|format(analysis.keyword_score) }}%
-                        </h2>
-
-                        <p>
-                            Based on required skills directly found in resume.
-                        </p>
-
-                    </div>
-
-
-                    <div class="dashboard-card">
-
-                        <div class="dashboard-icon">
-                            🧠
-                        </div>
-
-                        <h3>
-                            Semantic AI Score
-                        </h3>
-
-                        <h2>
-                            {{ "%.2f"|format(analysis.semantic_score) }}%
-                        </h2>
-
-                        <p>
-                            Based on semantic similarity between skills.
-                        </p>
-
-                    </div>
-
-
-                    <div class="dashboard-card">
-
-                        <div class="dashboard-icon">
-                            🎯
-                        </div>
-
-                        <h3>
-                            Hybrid AI Score
-                        </h3>
-
-                        <h2>
-                            {{ "%.2f"|format(analysis.final_score) }}%
-                        </h2>
-
-                        <p>
-                            Combined keyword and AI semantic matching.
-                        </p>
-
-                    </div>
-
-                </div>
-
+            <div class="glass-panel metric-panel card-3d">
+                <h4>🧠 Semantic AI Score</h4>
+                <div class="metric-val" style="color: var(--purple-glow);">{{ "%.2f"|format(analysis.semantic_score) }}%</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Neural embedding fit</p>
             </div>
 
-
-            <br>
-
-
-            <!-- Matched Skills -->
-
-            <div class="result-card">
-
-                <h2>✅ Matched Skills</h2>
-
-                <div class="skills">
-
-                    {% if analysis.matched_skills %}
-
-                        {% for skill in analysis.matched_skills %}
-
-                            <span class="skill-tag">
-                                {{ skill }}
-                            </span>
-
-                        {% endfor %}
-
-                    {% else %}
-
-                        <p>
-                            No exact skills matched.
-                        </p>
-
-                    {% endif %}
-
-                </div>
-
+            <div class="glass-panel metric-panel card-3d">
+                <h4>🎯 Hybrid AI Score</h4>
+                <div class="metric-val" style="color: var(--blue-glow);">{{ "%.2f"|format(analysis.final_score) }}%</div>
+                <p style="font-size: 12px; color: var(--text-muted); margin-top: 6px;">Combined score</p>
             </div>
+        </div>
 
-
-            <br>
-
-
-            <!-- Skill Gaps -->
-
-            <div class="result-card">
-
-                <h2>❌ Skill Gaps</h2>
-
-                <div class="skills">
-
-                    {% if analysis.missing_skills %}
-
-                        {% for skill in analysis.missing_skills %}
-
-                            <span class="skill-tag skill-gap-tag">
-                                {{ skill }}
-                            </span>
-
-                        {% endfor %}
-
-                    {% else %}
-
-                        <p>
-                            🎉 No major skill gaps detected.
-                        </p>
-
-                    {% endif %}
-
-                </div>
-
-            </div>
-
-
-            <br>
-
-
-            <!-- Job Description -->
-
-            <div class="result-card">
-
-                <h2>💼 Saved Job Description</h2>
-
-                <div class="extracted-text">
-                    {{ analysis.job_description }}
-                </div>
-
-            </div>
-
-
-            <br>
-
-
-            <!-- AI Interview Questions -->
-
-            <div class="result-card">
-
-                <h2>🤖 AI Interview Questions</h2>
-
-                <p>
-                    Regenerated interview questions based on candidate skill gaps.
-                </p>
-
-                <br>
-
-                {% if interview_questions %}
-
-                    {% for item in interview_questions %}
-
-                        <div class="interview-question">
-
-                            <h3>
-                                {{ loop.index }}. {{ item.question }}
-                            </h3>
-
-                            <p>
-                                <strong>Skill:</strong>
-                                {{ item.skill }}
-                            </p>
-
-                        </div>
-
-                        <br>
-
+        <!-- MATCHED SKILLS -->
+        <div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--emerald-glow);">
+                ✅ Matched Skills
+            </h3>
+            <div class="skills-container">
+                {% if analysis.matched_skills %}
+                    {% for skill in analysis.matched_skills %}
+                        <span class="chip chip-match">✓ {{ skill }}</span>
                     {% endfor %}
-
                 {% else %}
-
-                    <p>
-                        No interview questions generated for this record.
-                    </p>
-
+                    <p style="color: var(--text-muted); font-style: italic;">No exact skills matched.</p>
                 {% endif %}
-
             </div>
+        </div>
 
+        <!-- SKILL GAPS -->
+        <div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px; color: var(--rose-glow);">
+                ⚠️ Skill Gaps
+            </h3>
+            <div class="skills-container">
+                {% if analysis.missing_skills %}
+                    {% for skill in analysis.missing_skills %}
+                        <span class="chip chip-gap">⚠ {{ skill }}</span>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: var(--emerald-glow); font-weight: 600;">🎉 No major skill gaps detected.</p>
+                {% endif %}
+            </div>
+        </div>
 
-            <br>
+        <!-- JOB DESCRIPTION -->
+        <div class="glass-panel" style="padding: 30px; margin-bottom: 30px;">
+            <h3 style="font-size: 18px; font-weight: 700; margin-bottom: 14px;">💼 Evaluated Job Description</h3>
+            <div style="background: rgba(7, 10, 18, 0.6); border: 1px solid var(--glass-border); border-radius: var(--border-radius-md); padding: 20px; font-family: monospace; font-size: 13px; color: var(--text-secondary); white-space: pre-wrap; word-break: break-word; max-height: 250px; overflow-y: auto;">
+                {{- analysis.job_description -}}
+            </div>
+        </div>
 
-
-            <a href="/history" class="btn">
-                ← Back to Analysis History
-            </a>
-
-        </section>
-
+        <!-- AI INTERVIEW QUESTIONS -->
+        <div class="glass-panel" style="padding: 30px; margin-bottom: 40px;">
+            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 16px;">🤖 Regenerated Interview Questions</h3>
+            <div class="question-cards-list">
+                {% if interview_questions %}
+                    {% for item in interview_questions %}
+                        <div class="glass-panel question-card card-3d">
+                            <div class="q-badge">{{ item.skill }}</div>
+                            <div class="q-text">{{ loop.index }}. {{ item.question }}</div>
+                        </div>
+                    {% endfor %}
+                {% else %}
+                    <p style="color: var(--text-muted); font-style: italic;">No specific technical interview questions generated.</p>
+                {% endif %}
+            </div>
+        </div>
     </main>
 
-
     <!-- FOOTER -->
-
     <footer>
-
-        © 2026 SkillMatch AI |
-        AI Recruitment Intelligence Platform
-
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
     </footer>
 
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>

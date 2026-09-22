@@ -1,199 +1,115 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Candidate Ranking - SkillMatch AI</title>
-
+    <title>Applicant Leaderboard — SkillMatch AI</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-
 <body>
 
+    <!-- HEADER / NAVIGATION -->
     <header>
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
+        </div>
 
-    <div class="logo">
-        SkillMatch AI
-    </div>
-
-    <nav>
-
-        <a href="/">Home</a>
-
-        {% if session.get('user_id') %}
-
+        <nav>
+            <a href="/">Home</a>
             <a href="/dashboard">Dashboard</a>
-
             <a href="/jobs">Jobs</a>
-
             <a href="/upload">Resume Analysis</a>
+            <a href="/match">Matching</a>
+            <a href="/ranking" class="active">Ranking</a>
+            <a href="/history">History</a>
+            <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
+        </nav>
+    </header>
 
-            <a href="/match">Candidate Matching</a>
-
-            <a href="/ranking" class="active">Candidate Ranking</a>
-
-            <a href="/history">Analysis History</a>
-
-            <a href="/logout">Logout</a>
-
-        {% else %}
-
-            <a href="/login">Login</a>
-
-        {% endif %}
-
-    </nav>
-
-</header>
-
-
-    <main>
-
-        <section class="hero">
-
-            <div class="hero-content">
-
-                <h1>🏆 Candidate Ranking</h1>
-
-                <p>
-                    Candidates ranked according to their
-                    compatibility with the job requirements.
-                </p>
-
+    <!-- LEADERBOARD CONTENT -->
+    <main class="section-wrapper" style="padding-top: 40px; max-width: 1000px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; flex-wrap: wrap; gap: 16px;">
+            <div>
+                <div class="badge-pill" style="margin-bottom: 8px;">BATCH EVALUATION COMPLETED</div>
+                <h1 class="text-gradient-cyan" style="font-size: 34px; font-weight: 800;">
+                    🏆 Applicant Compatibility Leaderboard
+                </h1>
             </div>
 
-        </section>
+            <a href="/ranking" class="btn btn-primary">🏆 Rank More Candidates</a>
+        </div>
 
-
-        <section class="result-section">
-
-            <div class="container">
-
-                {% if candidates %}
-
+        {% if candidates %}
+            <div style="display: flex; flex-direction: column; gap: 24px;">
                 {% for candidate in candidates %}
+                    <div class="glass-panel card-3d" style="padding: 30px; display: grid; grid-template-columns: 80px 1fr 140px; gap: 24px; align-items: center;">
+                        <!-- Rank Badge -->
+                        <div style="text-align: center;">
+                            <div class="rank-badge {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% else %}btn-secondary{% endif %}" style="margin: 0 auto 6px;">
+                                #{{ loop.index }}
+                            </div>
+                            <span style="font-size: 11px; color: var(--text-muted); text-transform: uppercase;">Rank</span>
+                        </div>
 
-                <div class="result-card">
+                        <!-- Candidate Details -->
+                        <div>
+                            <h3 style="font-size: 20px; font-weight: 700; margin-bottom: 12px; color: var(--text-primary);">
+                                📄 {{ candidate.filename }}
+                            </h3>
 
-                    <h2>
-                        🏅 Rank {{ loop.index }}
-                    </h2>
+                            <div style="margin-bottom: 12px;">
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Matched Skills:</div>
+                                <div class="skills-container">
+                                    {% if candidate.matched %}
+                                        {% for skill in candidate.matched %}
+                                            <span class="chip chip-match" style="padding: 4px 10px; font-size: 11px;">✓ {{ skill }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span style="font-size: 12px; color: var(--text-muted);">None</span>
+                                    {% endif %}
+                                </div>
+                            </div>
 
-                    <h3>
-                        📄 {{ candidate.filename }}
-                    </h3>
+                            <div>
+                                <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Skill Gaps:</div>
+                                <div class="skills-container">
+                                    {% if candidate.missing %}
+                                        {% for skill in candidate.missing %}
+                                            <span class="chip chip-gap" style="padding: 4px 10px; font-size: 11px;">⚠ {{ skill }}</span>
+                                        {% endfor %}
+                                    {% else %}
+                                        <span style="font-size: 12px; color: var(--emerald-glow);">None</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
 
-
-                    <div class="score-box">
-
-                        <h1>
-                            {{ candidate.score }}%
-                        </h1>
-
-                        <p>
-                            Job Compatibility
-                        </p>
-
+                        <!-- Score Pill -->
+                        <div style="text-align: center; background: rgba(0, 242, 254, 0.05); border: 1px solid rgba(0, 242, 254, 0.2); padding: 20px; border-radius: var(--border-radius-md);">
+                            <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--cyan-glow); line-height: 1;">
+                                {{ "%.2f"|format(candidate.score) }}%
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); text-transform: uppercase; margin-top: 6px;">Compatibility</div>
+                        </div>
                     </div>
-
-
-                    <h3>✅ Matched Skills</h3>
-
-                    <div class="skills">
-
-                        {% if candidate.matched %}
-
-                        {% for skill in candidate.matched %}
-
-                        <span class="skill-tag">
-                            {{ skill }}
-                        </span>
-
-                        {% endfor %}
-
-                        {% else %}
-
-                        <p>No matching skills found.</p>
-
-                        {% endif %}
-
-                    </div>
-
-
-                    <br>
-
-
-                    <h3>❌ Skill Gaps</h3>
-
-                    <div class="skills">
-
-                        {% if candidate.missing %}
-
-                        {% for skill in candidate.missing %}
-
-                        <span class="skill-tag">
-                            {{ skill }}
-                        </span>
-
-                        {% endfor %}
-
-                        {% else %}
-
-                        <p>
-                            🎉 No major skill gaps detected.
-                        </p>
-
-                        {% endif %}
-
-                    </div>
-
-                </div>
-
                 {% endfor %}
-
-                {% else %}
-
-                <div class="result-card">
-
-                    <h2>No candidates found.</h2>
-
-                    <p>
-                        Please upload valid PDF resumes
-                        and try again.
-                    </p>
-
-                </div>
-
-                {% endif %}
-
-
-                <br>
-
-
-                <a href="/ranking" class="btn">
-
-                    🏆 Rank More Candidates
-
-                </a>
-
             </div>
-
-        </section>
-
+        {% else %}
+            <div class="glass-panel" style="padding: 60px; text-align: center; max-width: 600px; margin: 40px auto;">
+                <div style="font-size: 48px; margin-bottom: 16px;">📭</div>
+                <h2>No valid candidate resumes found.</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 24px;">Please upload valid candidate PDF resumes to generate leaderboard rankings.</p>
+                <a href="/ranking" class="btn btn-primary">Try Uploading Again</a>
+            </div>
+        {% endif %}
     </main>
 
-
+    <!-- FOOTER -->
     <footer>
-
-        <p>© 2026 SkillMatch AI</p>
-
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
     </footer>
 
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>

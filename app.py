@@ -611,7 +611,9 @@ def rank_candidates():
 
         result = calculate_match(
             candidate_skills,
-            required_skills
+            required_skills,
+            extracted_text,
+            job_description
         )
 
         candidates.append({

@@ -3,9 +3,20 @@ import os
 import json
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from services.job_matcher import normalize_skills
 
 DB_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(DB_DIR, "skillmatch.db")
+
+def _parse_skills_field(raw_field):
+    """Safely parse JSON or raw string skills field from database into a list of normalized strings."""
+    if not raw_field:
+        return []
+    try:
+        parsed = json.loads(raw_field)
+        return normalize_skills(parsed)
+    except Exception:
+        return normalize_skills(raw_field)
 
 def get_db_connection():
     """Establish connection to SQLite database."""
@@ -100,8 +111,8 @@ def save_analysis(
     cursor = conn.cursor()
     
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    matched_json = json.dumps(matched_skills if matched_skills else [])
-    missing_json = json.dumps(missing_skills if missing_skills else [])
+    matched_json = json.dumps(normalize_skills(matched_skills))
+    missing_json = json.dumps(normalize_skills(missing_skills))
 
     cursor.execute("""
         INSERT INTO analysis_history (
@@ -148,8 +159,8 @@ def get_all_analyses():
 
     results = []
     for row in rows:
-        matched = json.loads(row["matched_skills"]) if row["matched_skills"] else []
-        missing = json.loads(row["missing_skills"]) if row["missing_skills"] else []
+        matched = _parse_skills_field(row["matched_skills"])
+        missing = _parse_skills_field(row["missing_skills"])
         results.append({
             "id": row["id"],
             "resume_filename": row["resume_filename"],
@@ -175,8 +186,8 @@ def get_analysis_by_id(analysis_id):
     if not row:
         return None
 
-    matched = json.loads(row["matched_skills"]) if row["matched_skills"] else []
-    missing = json.loads(row["missing_skills"]) if row["missing_skills"] else []
+    matched = _parse_skills_field(row["matched_skills"])
+    missing = _parse_skills_field(row["missing_skills"])
 
     return {
         "id": row["id"],
@@ -196,7 +207,7 @@ def create_job(job_title, company_name, job_description, required_skills):
     conn = get_db_connection()
     cursor = conn.cursor()
     created_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    skills_json = json.dumps(required_skills if required_skills else [])
+    skills_json = json.dumps(normalize_skills(required_skills))
     
     cursor.execute("""
         INSERT INTO jobs (
@@ -228,7 +239,7 @@ def get_all_jobs():
 
     jobs = []
     for row in rows:
-        skills = json.loads(row["required_skills"]) if row["required_skills"] else []
+        skills = _parse_skills_field(row["required_skills"])
         jobs.append({
             "id": row["id"],
             "job_title": row["job_title"],
@@ -251,7 +262,7 @@ def get_job_by_id(job_id):
     if not row:
         return None
 
-    skills = json.loads(row["required_skills"]) if row["required_skills"] else []
+    skills = _parse_skills_field(row["required_skills"])
     return {
         "id": row["id"],
         "job_title": row["job_title"],
@@ -266,7 +277,7 @@ def update_job(job_id, job_title, company_name, job_description, required_skills
     """Update an existing job description and required skills in SQLite database."""
     conn = get_db_connection()
     cursor = conn.cursor()
-    skills_json = json.dumps(required_skills if required_skills else [])
+    skills_json = json.dumps(normalize_skills(required_skills))
 
     cursor.execute("""
         UPDATE jobs
@@ -329,7 +340,7 @@ def get_dashboard_stats():
     total_skill_gaps = 0
     for r in all_missing_rows:
         if r["missing_skills"]:
-            missing_list = json.loads(r["missing_skills"])
+            missing_list = _parse_skills_field(r["missing_skills"])
             total_skill_gaps += len(missing_list)
 
     return {
@@ -340,3 +351,4 @@ def get_dashboard_stats():
         "total_jobs": total_jobs,
         "has_data": True
     }
+

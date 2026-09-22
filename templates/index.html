@@ -1,308 +1,225 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>SkillMatch AI</title>
-
+    <title>SkillMatch AI — Futuristic AI Recruitment & Skill Intelligence Platform</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
-
 </head>
-
 <body>
 
-
-    <!-- =====================================================
-         HEADER
-    ====================================================== -->
-
+    <!-- HEADER / NAVIGATION -->
     <header>
-
-        <div class="logo">
-            SkillMatch AI
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
         </div>
 
         <nav>
-
             <a href="/" class="active">Home</a>
-
             {% if session.get('user_id') %}
-
                 <a href="/dashboard">Dashboard</a>
-
                 <a href="/jobs">Jobs</a>
-
                 <a href="/upload">Resume Analysis</a>
-
-                <a href="/match">Candidate Matching</a>
-
-                <a href="/ranking">Candidate Ranking</a>
-
-                <a href="/history">Analysis History</a>
-
-                <a href="/logout">Logout</a>
-
+                <a href="/match">Matching</a>
+                <a href="/ranking">Ranking</a>
+                <a href="/history">History</a>
+                <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
             {% else %}
-
-                <a href="/login">Login</a>
-
+                <a href="/login" class="btn btn-primary" style="padding: 6px 18px; font-size: 13px; color: #000;">Login</a>
             {% endif %}
-
         </nav>
-
     </header>
 
-
-
-    <!-- =====================================================
-         HERO SECTION
-    ====================================================== -->
-
-    <section class="hero">
-
-        <div class="hero-content">
-
-            <h1>
-                AI-Powered Recruitment
-                & Skill Intelligence
-            </h1>
-
+    <!-- HERO SECTION -->
+    <section class="hero-wrapper">
+        <div class="hero-text">
+            <div class="badge-pill">
+                <span>🤖</span> NEXT-GEN RECRUITMENT INTELLIGENCE
+            </div>
+            <h1>AI-Powered Recruitment Intelligence</h1>
             <p>
-                Analyze resumes, understand job requirements,
-                match candidates with suitable roles and identify
-                important skill gaps using AI.
+                Analyze resumes, match candidates against complex job roles, identify critical skill gaps, and generate personalized AI interview questions in seconds.
             </p>
-
-
-            <div class="hero-buttons">
-
-                <a href="/upload">
-                    <button>
-                        📄 Candidate Analysis
-                    </button>
+            <div class="hero-actions">
+                <a href="/match" class="btn btn-primary">
+                    🎯 Start Matching Candidate
                 </a>
-
-
-                <a href="/job">
-                    <button class="secondary-button">
-                        💼 Job Description
-                    </button>
+                <a href="/dashboard" class="btn btn-secondary">
+                    📊 Explore Platform
                 </a>
-
-
-                <a href="/match">
-                    <button>
-                        🎯 Match Candidate
-                    </button>
-                </a>
-
             </div>
-
         </div>
 
+        <!-- 3D RECRUITMENT VISUALIZATION -->
+        <div class="hero-visual">
+            <div class="visual-scene">
+                <div class="ambient-glow"></div>
+
+                <!-- Central Floating Spatial Card -->
+                <div class="spatial-card glass-panel">
+                    <div class="card-header-mini">
+                        <div>
+                            <span style="font-size: 12px; color: var(--text-muted); text-transform: uppercase;">Candidate Match</span>
+                            <h4 style="font-size: 16px; font-weight: 700;">Senior Cloud Engineer</h4>
+                        </div>
+                        <div class="match-ring-badge">
+                            88%
+                            <span>MATCH</span>
+                        </div>
+                    </div>
+
+                    <div style="font-size: 13px; color: var(--text-secondary); margin-bottom: 10px;">
+                        Extracted Candidate Skills:
+                    </div>
+                    <div class="skill-nodes-grid">
+                        <span class="node-chip matched">Python</span>
+                        <span class="node-chip matched">AWS</span>
+                        <span class="node-chip matched">Kubernetes</span>
+                        <span class="node-chip matched">Docker</span>
+                        <span class="node-chip gap">Terraform</span>
+                        <span class="node-chip gap">CI/CD</span>
+                    </div>
+                </div>
+
+                <!-- Satellite Badge Card -->
+                <div class="satellite-card glass-panel">
+                    <div class="satellite-icon">🧠</div>
+                    <div>
+                        <div style="font-size: 13px; font-weight: 700; color: var(--text-primary);">Semantic AI Similarity</div>
+                        <div style="font-size: 12px; color: var(--cyan-glow);">70% Keyword + 30% Embeddings</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </section>
 
-
-
-    <!-- =====================================================
-         FEATURES
-    ====================================================== -->
-
-    <section class="features" id="features">
-
-        <h2>
-            What SkillMatch AI Does
-        </h2>
-
-
-        <div class="feature-container">
-
-
-            <!-- Resume -->
-
-            <div class="feature-card">
-
-                <h3>
-                    📄 Resume Analysis
-                </h3>
-
-                <p>
-                    Upload a candidate resume and automatically
-                    extract important technical skills.
-                </p>
-
-                <br>
-
-                <a href="/upload">
-                    Analyze Resume →
-                </a>
-
-            </div>
-
-
-
-            <!-- Job -->
-
-            <div class="feature-card">
-
-                <h3>
-                    💼 Job Analysis
-                </h3>
-
-                <p>
-                    Enter a job description and identify the
-                    technical skills required for the role.
-                </p>
-
-                <br>
-
-                <a href="/job">
-                    Analyze Job →
-                </a>
-
-            </div>
-
-
-
-            <!-- Matching -->
-
-            <div class="feature-card">
-
-                <h3>
-                    🎯 Candidate Matching
-                </h3>
-
-                <p>
-                    Compare candidate skills with job requirements
-                    and calculate compatibility.
-                </p>
-
-                <br>
-
-                <a href="/match">
-                    Match Candidate →
-                </a>
-
-            </div>
-
-
-
-            <!-- Skill Gap -->
-
-            <div class="feature-card">
-
-                <h3>
-                    🧠 Skill Gap Analysis
-                </h3>
-
-                <p>
-                    Identify missing skills and understand what
-                    the candidate needs to improve.
-                </p>
-
-                <br>
-
-                <a href="/match">
-                    View Skill Gap →
-                </a>
-
-            </div>
-
+    <!-- SECTION 1: HOW IT WORKS -->
+    <section class="section-wrapper">
+        <div class="section-header">
+            <h2>How SkillMatch AI Works</h2>
+            <p>An end-to-end automated workflow powered by Natural Language Processing and Deep Embedding Models.</p>
         </div>
 
+        <div class="grid-features">
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box">📄</div>
+                <h3>1. Upload Resume</h3>
+                <p>Upload candidate PDF resumes. SkillMatch AI parses text, strips formatting noise, and detects technical skills whole-word accurately.</p>
+            </div>
+
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box">💼</div>
+                <h3>2. Analyze Job</h3>
+                <p>Input job description requirements or select from pre-saved recruiter jobs to extract essential skills and experience criteria.</p>
+            </div>
+
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box">⚡</div>
+                <h3>3. Hybrid AI Match</h3>
+                <p>Combines exact & related weighted skill matching with SentenceTransformer neural embeddings to compute accurate compatibility.</p>
+            </div>
+
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box">🎯</div>
+                <h3>4. Gap & Interview Insights</h3>
+                <p>Instantly view missing skill gaps and receive automatically generated technical interview questions tailored to the candidate.</p>
+            </div>
+        </div>
     </section>
 
-
-
-    <!-- =====================================================
-         WORKFLOW
-    ====================================================== -->
-
-    <section class="features">
-
-        <h2>
-            How SkillMatch AI Works
-        </h2>
-
-
-        <div class="feature-container">
-
-
-            <div class="feature-card">
-
-                <h3>1️⃣ Upload Resume</h3>
-
-                <p>
-                    Recruiter uploads the candidate's PDF resume.
-                </p>
-
+    <!-- SECTION 2: AI-POWERED MATCHING -->
+    <section class="section-wrapper" style="padding-top: 0;">
+        <div class="glass-panel" style="padding: 60px 8%; background: linear-gradient(135deg, rgba(13, 19, 34, 0.9), rgba(7, 10, 18, 0.95)); border-color: rgba(0, 242, 254, 0.2);">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 50px; align-items: center;">
+                <div>
+                    <div class="badge-pill">HYBRID MATCHING ENGINE</div>
+                    <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 20px;">Precision Keyword & Neural Embedding Intelligence</h2>
+                    <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 24px;">
+                        Standard keyword matchers fail when candidates use synonyms or related frameworks. SkillMatch AI evaluates both weighted keyword coverage (70%) and sentence transformer vector similarity (30%) for unmatched precision.
+                    </p>
+                    <a href="/match" class="btn btn-primary">Try Candidate Matching →</a>
+                </div>
+                <div class="glass-panel" style="padding: 30px; text-align: center;">
+                    <div style="font-size: 14px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 12px;">Hybrid Matching Score Formula</div>
+                    <div style="font-family: var(--font-heading); font-size: 32px; font-weight: 800; color: var(--cyan-glow); margin-bottom: 16px;">
+                        70% Keyword + 30% Semantic AI
+                    </div>
+                    <div style="font-size: 13px; color: var(--text-secondary);">
+                        Weighted by domain importance (Cloud, DevOps, Data Science, Full Stack).
+                    </div>
+                </div>
             </div>
+        </div>
+    </section>
 
-
-            <div class="feature-card">
-
-                <h3>2️⃣ Analyze Job</h3>
-
-                <p>
-                    Job description is analyzed to identify
-                    required skills.
-                </p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <h3>3️⃣ Match Skills</h3>
-
-                <p>
-                    Candidate skills are compared with the
-                    required job skills.
-                </p>
-
-            </div>
-
-
-            <div class="feature-card">
-
-                <h3>4️⃣ Get Results</h3>
-
-                <p>
-                    SkillMatch AI generates a compatibility score
-                    and identifies skill gaps.
-                </p>
-
-            </div>
-
+    <!-- SECTION 3: SKILL GAP INTELLIGENCE -->
+    <section class="section-wrapper" style="padding-top: 0;">
+        <div class="section-header">
+            <h2>Skill Gap Intelligence</h2>
+            <p>Pinpoint missing technical competencies and accelerate recruiter decision making.</p>
         </div>
 
+        <div class="grid-features">
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.1);">✅</div>
+                <h3>Verified Matched Skills</h3>
+                <p>Highlight candidate strengths that directly fulfill required job parameters with canonical skill normalization.</p>
+                <a href="/upload" class="feature-link">Analyze Resume →</a>
+            </div>
+
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box" style="border-color: rgba(244, 63, 94, 0.3); background: rgba(244, 63, 94, 0.1);">⚠️</div>
+                <h3>Identified Skill Gaps</h3>
+                <p>Isolate critical role requirements missing from candidate profiles for targeted upskilling or screening focus.</p>
+                <a href="/match" class="feature-link">View Gap Analysis →</a>
+            </div>
+
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box" style="border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.1);">💡</div>
+                <h3>Automated Interview Generator</h3>
+                <p>Generate contextual technical questions specifically tailored to missing candidate skills during interview rounds.</p>
+                <a href="/history" class="feature-link">Explore History →</a>
+            </div>
+        </div>
     </section>
 
+    <!-- SECTION 4: CANDIDATE RANKING -->
+    <section class="section-wrapper" style="padding-top: 0;">
+        <div class="glass-panel" style="padding: 50px 6%; text-align: center;">
+            <div class="badge-pill" style="margin: 0 auto 20px;">BATCH RECRUITMENT</div>
+            <h2 style="font-size: 36px; font-weight: 700; margin-bottom: 16px;">Multi-Candidate Batch Ranking</h2>
+            <p style="color: var(--text-secondary); max-width: 700px; margin: 0 auto 30px; line-height: 1.7;">
+                Upload multiple applicant PDF resumes simultaneously to score, compare, and rank candidates against a target job description in a unified spatial leader grid.
+            </p>
+            <a href="/ranking" class="btn btn-primary">Rank Applicants Now →</a>
+        </div>
+    </section>
 
+    <!-- SECTION 5: AI INTERVIEW QUESTIONS & RECRUITER WORKFLOW -->
+    <section class="section-wrapper" style="padding-top: 0;">
+        <div class="grid-features" style="grid-template-columns: 1fr 1fr;">
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box">❓</div>
+                <h3>AI Technical Question Generator</h3>
+                <p>Never enter an interview unprepared. SkillMatch AI synthesizes targeted technical interview questions for every detected skill gap, allowing recruiters to assess candidate growth potential quickly.</p>
+                <a href="/match" class="btn btn-secondary" style="margin-top: 10px;">Test Generator</a>
+            </div>
 
-    <!-- =====================================================
-         FOOTER
-    ====================================================== -->
+            <div class="glass-panel feature-panel card-3d">
+                <div class="feature-icon-box">📊</div>
+                <h3>Recruiter Workflow Command Center</h3>
+                <p>Manage job postings, save candidate analysis history, track recruitment statistics, and stream candidate evaluations into a centralized recruiter workspace.</p>
+                <a href="/dashboard" class="btn btn-secondary" style="margin-top: 10px;">View Command Center</a>
+            </div>
+        </div>
+    </section>
 
+    <!-- FOOTER -->
     <footer>
-
-        © 2026 SkillMatch AI |
-        AI Recruitment Intelligence Platform
-
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
     </footer>
 
-
-
-    <!-- JAVASCRIPT -->
-
-    <script src="{{ url_for('static', filename='js/script.js') }}">
-    </script>
-
-
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>

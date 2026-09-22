@@ -1,114 +1,65 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-
     <meta charset="UTF-8">
-
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
-    <title>Job Analysis - SkillMatch AI</title>
-
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='css/style.css') }}">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Job Description Analysis — SkillMatch AI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-
-
 <body>
 
-<header>
+    <!-- HEADER / NAVIGATION -->
+    <header>
+        <div class="logo-container">
+            <div class="logo-icon">⚡</div>
+            <div class="logo">SkillMatch AI</div>
+        </div>
 
-    <div class="logo">
-        SkillMatch AI
-    </div>
-
-    <nav>
-
-        <a href="/">Home</a>
-
-        {% if session.get('user_id') %}
-
+        <nav>
+            <a href="/">Home</a>
             <a href="/dashboard">Dashboard</a>
-
             <a href="/jobs">Jobs</a>
-
             <a href="/upload">Resume Analysis</a>
+            <a href="/match">Matching</a>
+            <a href="/ranking">Ranking</a>
+            <a href="/history">History</a>
+            <a href="/logout" class="btn btn-secondary" style="padding: 6px 14px; font-size: 13px;">Logout</a>
+        </nav>
+    </header>
 
-            <a href="/match">Candidate Matching</a>
+    <!-- JOB ANALYZER WORKSPACE -->
+    <main class="section-wrapper" style="padding-top: 50px;">
+        <div class="glass-panel form-container">
+            <div style="text-align: center; margin-bottom: 30px;">
+                <div class="badge-pill" style="margin-bottom: 12px;">REQUIREMENT EXTRACTION</div>
+                <h1 class="text-gradient-cyan" style="font-size: 32px; font-weight: 800;">
+                    💼 Job Description Skill Analyzer
+                </h1>
+                <p style="color: var(--text-secondary); font-size: 15px; margin-top: 8px;">
+                    Paste a job description below to automatically extract required technical skill profiles.
+                </p>
+            </div>
 
-            <a href="/ranking">Candidate Ranking</a>
+            <form action="/job/analyze" method="POST">
+                <div class="form-group">
+                    <label>Job Description Requirements</label>
+                    <textarea name="job_description" class="form-control" rows="12" placeholder="Paste full job description here..." required></textarea>
+                </div>
 
-            <a href="/history">Analysis History</a>
+                <div style="text-align: center; margin-top: 30px;">
+                    <button type="submit" class="btn btn-primary" style="width: 100%; justify-content: center;">
+                        ⚡ Extract Required Job Skills
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
 
-            <a href="/logout">Logout</a>
+    <!-- FOOTER -->
+    <footer>
+        © 2026 SkillMatch AI | AI Recruitment Intelligence Platform
+    </footer>
 
-        {% else %}
-
-            <a href="/login">Login</a>
-
-        {% endif %}
-
-    </nav>
-
-</header>
-
-
-<main>
-
-<section class="features">
-
-    <h2>
-        Job Description Analyzer
-    </h2>
-
-    <p>
-        Enter the job description below.
-        SkillMatch AI will identify the required skills.
-    </p>
-
-    <br>
-
-
-    <form action="/job/analyze"
-          method="POST">
-
-        <textarea
-            name="job_description"
-            rows="15"
-            placeholder="Paste the Job Description here..."
-            required
-            style="
-                width:80%;
-                padding:20px;
-                border:1px solid #ddd;
-                border-radius:10px;
-                font-size:16px;
-            "
-        ></textarea>
-
-        <br><br>
-
-        <button type="submit">
-            Analyze Job
-        </button>
-
-    </form>
-
-</section>
-
-</main>
-
-
-<footer>
-
-    <p>
-        © 2026 SkillMatch AI
-    </p>
-
-</footer>
-
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
 </body>
-
 </html>
